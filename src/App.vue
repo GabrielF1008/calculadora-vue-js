@@ -1,32 +1,46 @@
 <script setup>
 import { reactive } from 'vue';
+import Cabecalho from './components/Cabecalho.vue';
+import Operacao from './components/Operacao.vue';
+import Resultado from './components/Resultado.vue';
 
 
 const estado = reactive({
-  numero1: parseInt(0),
-  numero2: parseInt(0)
+  num1: '',
+  num2: '',
+  operacao: '+'
 })
 
-function exibeResultadoMultiplicacao() {
-  return parseInt(estado.numero1) + parseInt(estado.numero2)
+const resultado = () => {
+  const {operacao} = estado
+  switch(operacao) {
+    case '-':
+      return parseFloat(estado.num1) - parseFloat(estado.num2)
+    case '*':
+      return parseFloat(estado.num1) * parseFloat(estado.num2)
+    case '/':
+      return parseFloat(estado.num1) / parseFloat(estado.num2)
+    default:
+      return parseFloat(estado.num1) + parseFloat(estado.num2)
+  }
 }
 </script>
 
 <template>
-  <div>
-    <select>
-      <option value="subtracao">Subtração</option>
-      <option value="adicao">Adição</option>
-      <option value="divisao">Divisão</option>
-      <option value="multiplicacao">Multiplicação</option> 
-    </select>
-  </div>
-  <form>
-    <br>
-    <input @keyup="evento => estado.numero1 = evento.target.value" type="number" placeholder="Número 1"> <br>
-    <input @keyup="evento => estado.numero2 = evento.target.value" type="number" placeholder="Número 2"> <br>
-    <span> Resultado: {{ exibeResultadoMultiplicacao() }} </span>
-  </form>
+    <body>
+      <div class="container">
+        <Cabecalho />
+        <Operacao 
+          :operacao="evento => estado.operacao = evento.target.value" 
+          :num1="evento => estado.num1 = evento.target.value" 
+          :num2="evento => estado.num2 = evento.target.value" />
+        <Resultado 
+          :num1="estado.num1"
+          :num2="estado.num2"
+          :resultado="resultado()"
+        />
+      </div>
+    </body>
 </template>
 
 <style scoped></style>
